@@ -1,14 +1,13 @@
-.Container {
-  width: 1170px;
-  min-height: 300px;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 30px;
-  background-color: rgb(139, 139, 179);
-  background-size: cover;
+.section {
+  width: 770px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-h1 {
-  margin: 0;
-  margin-bottom: 10px;
+.heading {
+  font-size: 40px;
+  padding: 0;
+  margin-bottom: 20px;
+  font-style: italic;
+  color: #343;
 }

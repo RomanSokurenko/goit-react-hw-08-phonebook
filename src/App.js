@@ -1,43 +1,52 @@
-import Container from './Components/Container';
-import Form from './Components/Form';
-import Contacts from './Components/Contacts';
-import Filter from './Components/Filter';
-import AppBar from './Components/AppBar';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { contactsOperations } from './redux/contacts';
-import { Switch, Route } from 'react-router-dom';
-import HomeView from './views/HomeView';
-import LoginView from './views/LoginView';
-import ContactsView from './views/ContactsView';
-import RegisterView from './views/RegisterView';
+import { Switch } from 'react-router-dom';
 
-function App() {
-  const dispatch = useDispatch();
+import Appbar from './components/Appbar/Appbar';
+import Login from './views/Login/Login';
+import HomeView from './views/HomeView/HomeView';
+import Signup from './views/Signup/Signup';
+import Contacts from './views/Contacts/Contacts';
+import PublicRoute from './components/PublicRoute';
+import PrivateRoute from './components/PrivateRoute';
+import authOperations from './redux/auth/auth-operations';
 
-  useEffect(() => dispatch(contactsOperations.fetchContacts()), [dispatch]);
+class App extends Component {
+  componentDidMount() {
+    this.props.onGetCurrentUser();
+  }
 
-  return (
-    <Container>
-      <AppBar />
-      {/* <h1>Phonebook</h1>
-      <Form />
-      <h2>Contacts</h2>
-      <Filter />
-      <Contacts /> */}
-      <Switch>
-        <Route exact path="/" component={HomeView} />
-        <Route path="/login" component={LoginView} />
-        <Route path="/contacts" component={ContactsView} />
-        <Route path="/register" component={RegisterView} />
-      </Switch>
-    </Container>
-  );
+  render() {
+    return (
+      <>
+        <Appbar />
+        <Switch>
+          <PublicRoute exact path="/" component={HomeView} />
+          <PublicRoute
+            path="/signup"
+            restricted
+            redirectTo="/phonebook"
+            component={Signup}
+          />
+          <PublicRoute
+            path="/login"
+            restricted
+            redirectTo="/phonebook"
+            component={Login}
+          />
+          <PrivateRoute
+            path="/phonebook"
+            redirectTo="/login"
+            component={Contacts}
+          />
+        </Switch>
+      </>
+    );
+  }
 }
 
-const mapDispatchToProps = dispatch => ({
-  fetchContacts: () => dispatch(contactsOperations.fetchContacts()),
-});
+const mapDispatchToProps = {
+  onGetCurrentUser: authOperations.getCurrentUser,
+};
+
 export default connect(null, mapDispatchToProps)(App);
-// export default App;
